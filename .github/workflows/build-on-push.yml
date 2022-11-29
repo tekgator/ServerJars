@@ -1,0 +1,47 @@
+name: "build-on-push"
+
+on:
+  push:
+    branches: [main, dev]
+    paths-ignore:
+      - "**.md"
+      - "LICENSE"
+      - "Resources/**"
+  pull_request:
+    branches: [main, dev]
+    paths-ignore:
+      - "README.md"
+      - "CHANGELOG.md"
+      - "LICENSE"
+
+env:
+  SOLUTION_PATH: ServerJars.sln
+  PACKAGE_OUTPUT_DIR: ${{ github.workspace }}\output
+  NUGET_SOURCE_URL: "https://api.nuget.org/v3/index.json"
+
+jobs:
+  build:
+    name: "build"
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Install dotnet"
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: "7.0.x"
+
+      - name: "Restore packages"
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+
+      - name: "Build project"
+        run: dotnet build ${{ env.SOLUTION_PATH }} --no-restore --configuration Release
+
+      - name: "Test project"
+        run: dotnet test ${{ env.SOLUTION_PATH }} --no-restore --configuration Release
