@@ -66,7 +66,7 @@ It will run straight out of the box to give you a hint what the library can do f
 
 ## Support
 
-I try to be responsive to [Stack Overflow questions in the `gamelib-net` tag](https://stackoverflow.com/questions/tagged/serverjars-net) and [issues logged on this GitHub repository](https://github.com/tekgator/ServerJars/issues). 
+I try to be responsive to [Stack Overflow questions in the `serverjars-net` tag](https://stackoverflow.com/questions/tagged/serverjars-net) and [issues logged on this GitHub repository](https://github.com/tekgator/ServerJars/issues). 
 
 If I've helped you, feel free to buy me a coffee or see the Sponsor link [at the top right of the GitHub page](https://github.com/tekgator/ServerJars).
 
