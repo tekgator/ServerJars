@@ -7,7 +7,7 @@
     <PackageId>ServerJars</PackageId>
     <Authors>Patrick Weiss</Authors>
     <Product>ServerJars</Product>
-	<Title>ServerJars</Title>
+  	<Title>ServerJars</Title>
     <PackageProjectUrl>https://github.com/tekgator/ServerJars</PackageProjectUrl>
     <PackageIcon>ServerJars-Logo-64px.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -17,7 +17,6 @@
     <Description>The .NET API for ServerJars.com</Description>
     <Copyright>@Patrick Weiss 2022</Copyright>
     <PackageTags>ServerJars;Java;Minecraft;Mojang;Vanilla;Spigot;Paper;Server;API</PackageTags>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 	
   <ItemGroup>
