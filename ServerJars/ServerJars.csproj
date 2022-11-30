@@ -17,6 +17,7 @@
     <Description>The .NET API for ServerJars.com</Description>
     <Copyright>@Patrick Weiss 2022</Copyright>
     <PackageTags>ServerJars;Java;Minecraft;Mojang;Vanilla;Spigot;Paper;Server;API</PackageTags>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 	
   <ItemGroup>
