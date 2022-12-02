@@ -55,8 +55,13 @@ ResetConsoleColor();
 
 using var fileStream1 = File.Create("./server1.jar");
 Progress<ProgressEventArgs> progress = new();
-progress.ProgressChanged += (_, progress) => Console.Write($"\rProgress: {progress.ProgressPercentage}% ({progress.BytesTransferred / 1024 / 1024}MB / {progress.TotalBytes / 1024 / 1024}MB)          ");
+progress.ProgressChanged += (_, e) =>
+{
+    Console.Write($"\rProgress: {e.ProgressPercentage}% ({e.BytesTransferred / 1024 / 1024}MB / {e.TotalBytes / 1024 / 1024}MB)          ");
+};
 await serverJar.GetJar(fileStream1, "servers", "spigot", progress: progress);
+await fileStream1.FlushAsync();
+Console.WriteLine($"\nDownloaded {fileStream1.Length / 1024 / 1024}MB to {fileStream1.Name}");
 
 // GetJar Method 2
 SetConsoleColor(ConsoleColor.White, ConsoleColor.Red);
@@ -67,6 +72,7 @@ using (var stream = await serverJar.GetJar("servers", "spigot", "1.19.1"))
 {
     using var fileStream2 = File.Create("./server2.jar");
     await stream.CopyToAsync(fileStream2);
+    Console.WriteLine($"Downloaded {fileStream2.Length / 1024 / 1024}MB to {fileStream2.Name}");
 }
 ```
 
