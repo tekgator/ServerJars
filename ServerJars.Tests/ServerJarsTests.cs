@@ -129,7 +129,6 @@ public class ServerJarsTests
     [TestCase("servers", "spigot", "1.19.110")]
     public void GetJarWithProgress_InvalidTypeCategoryVersion(string type, string category, string version)
     {
-        bool progressChanged = false;
         using var memStream = new MemoryStream();
         Progress<ProgressEventArgs> progress = new();
         progress.ProgressChanged += (_, progress) =>
@@ -139,13 +138,17 @@ public class ServerJarsTests
                 Assert.That(progress.ProgressPercentage, Is.AtLeast(0));
                 Assert.That(progress.ProgressPercentage, Is.AtMost(100));
             });
-            progressChanged = true;
         };
 
-        Assert.Multiple(() =>
-        {
-            Assert.ThrowsAsync<HttpRequestException>(async () => await _serverJars.GetJar(memStream, type, category, version, progress));
-            Assert.That(progressChanged, Is.True);
-        });
+        Assert.ThrowsAsync<HttpRequestException>(async () => await _serverJars.GetJar(memStream, type, category, version, progress));
+    }
+
+    [TestCase("servers", "spigot", "")]
+    [TestCase("servers", "spigot", "1.19.1")]
+    public async Task GetJarWithNullProgress_Success(string type, string category, string version)
+    {
+        using var memStream = new MemoryStream();
+        await _serverJars.GetJar(memStream, type, category, version);
+        Assert.That(memStream.Length, Is.GreaterThan(0));
     }
 }

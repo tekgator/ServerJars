@@ -1,7 +1,7 @@
 ﻿using ServerJarsAPI.Converter;
 using ServerJarsAPI.Events;
+using ServerJarsAPI.Extensions;
 using ServerJarsAPI.Models;
-using System.Net.Http.Handlers;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -10,21 +10,14 @@ namespace ServerJarsAPI;
 public abstract class ClientApi : IDisposable
 {
     private readonly HttpClient _httpClient;
-    private readonly ProgressMessageHandler _progressMessageHandler;
-
+    private readonly bool _disposeClient = true;
     private readonly JsonSerializerOptions _jsonOptions = new();
 
-    protected ClientApi(string baseUri)
+    protected ClientApi(string baseUri, HttpClient httpClient, bool disposeClient = false)
     {
-        _progressMessageHandler = new ProgressMessageHandler(new HttpClientHandler()
-        {
-            AllowAutoRedirect = true
-        });
-
-        _httpClient = new HttpClient(_progressMessageHandler)
-        {
-            BaseAddress = new Uri(baseUri)
-        };
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri(baseUri);
+        _disposeClient = disposeClient;
 
         _jsonOptions.Converters.Add(new UnixEpochDateTimeConverter());
     }
@@ -51,7 +44,6 @@ public abstract class ClientApi : IDisposable
 
         string errorMsg = await GetErrorRepsonse(httpResponse, cancellationToken);
         throw new HttpRequestException($"{httpResponse.ReasonPhrase}: {errorMsg}", null, httpResponse.StatusCode);
-
     }
 
     protected async Task<Stream> StreamAsync(
@@ -78,13 +70,7 @@ public abstract class ClientApi : IDisposable
         IProgress<ProgressEventArgs>? progress,
         CancellationToken cancellationToken = default)
     {
-        void processEventHandler(object? _, HttpProgressEventArgs args)
-        {
-            progress?.Report(new ProgressEventArgs(args.ProgressPercentage, args.BytesTransferred, args.TotalBytes));
-        }
-
-        _progressMessageHandler.HttpReceiveProgress += processEventHandler;
-        progress?.Report(new ProgressEventArgs(0, 0));
+        progress?.Report(new ProgressEventArgs());
 
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
         requestMessage.Headers.Add("Accept", "application/json");
@@ -97,12 +83,19 @@ public abstract class ClientApi : IDisposable
             throw new HttpRequestException($"{httpResponse.ReasonPhrase}: {errorMsg}", null, httpResponse.StatusCode);
         }
 
-        progress?.Report(new ProgressEventArgs(0, 0, httpResponse.Content.Headers.ContentLength));
+        var contentLength = httpResponse.Content.Headers.ContentLength;
+        progress?.Report(new ProgressEventArgs() { TotalBytes = contentLength });
 
         using var httpStream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken);
-        await httpStream.CopyToAsync(stream, cancellationToken);
 
-        _progressMessageHandler.HttpReceiveProgress -= processEventHandler;
+        if (progress is null || !contentLength.HasValue)
+        {
+            await httpStream.CopyToAsync(stream, cancellationToken);
+            return;
+        }
+
+        await httpStream.CopyToAsync(stream, 1024, contentLength, progress, cancellationToken);
+        return;
     }
 
     private static async Task<string> GetErrorRepsonse(
@@ -130,8 +123,10 @@ public abstract class ClientApi : IDisposable
     {
         if (disposing)
         {
-            _progressMessageHandler?.Dispose();
-            _httpClient?.Dispose();
+            if (_disposeClient)
+            {
+                _httpClient?.Dispose();
+            }
         }
     }
 }

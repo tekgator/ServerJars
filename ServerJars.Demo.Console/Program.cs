@@ -55,7 +55,10 @@ ResetConsoleColor();
 
 using var fileStream1 = File.Create("./server1.jar");
 Progress<ProgressEventArgs> progress = new();
-progress.ProgressChanged += (_, progress) => Console.Write($"\rProgress: {progress.ProgressPercentage}% ({progress.BytesTransferred / 1024 / 1024}MB / {progress.TotalBytes / 1024 / 1024}MB)          ");
+progress.ProgressChanged += (_, progress) =>
+{
+    Console.Write($"\rProgress: {progress.ProgressPercentage}% ({progress.BytesTransferred / 1024 / 1024}MB / {progress.TotalBytes / 1024 / 1024}MB)          ");
+};
 await serverJar.GetJar(fileStream1, "servers", "spigot", progress: progress);
 
 

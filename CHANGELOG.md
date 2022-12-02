@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.0.2] - 2022-12-02
+### Changed
+- Progress calculation for downloader doesn't depend on an external Nuget anymore
+- Reintroduce functionality to pass own HTTP client
+
+
 ## [1.0.1] - 2022-12-02
 ### Added
 - New GetJar Method with possibility to pass IProgress for progress reporting
