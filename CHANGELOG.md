@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.0.1] - 2022-12-02
+### Added
+- New GetJar Method with possibility to pass IProgress for progress reporting
+
+### Changed
+- GetJar Method downloads header first to verify status code, then downloads rest
+
+### Removed
+- Possibility to pass own HTTP client
+
+
 ## [1.0.0] - 2022-11-30
 ### Added
 - Create Nuget and publish on nuget.org

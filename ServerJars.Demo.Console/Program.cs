@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using ServerJarsAPI;
+using ServerJarsAPI.Events;
 using System.Text.Json;
 
 var jsonOptions = new JsonSerializerOptions
@@ -47,17 +48,26 @@ var allDetails = await serverJar.GetAllDetails("servers", "spigot", 5u);
 Console.WriteLine(JsonSerializer.Serialize(allDetails, jsonOptions));
 
 
-// GetJar
+// GetJar Method 1 (including progress)
 SetConsoleColor(ConsoleColor.White, ConsoleColor.Red);
-Console.WriteLine("\nAPI call - GetJar:\n");
+Console.WriteLine("\nAPI call - GetJar with method 1 (with progress):\n");
 ResetConsoleColor();
 
-using (var stream = await serverJar.GetJar("servers", "spigot"))
+using var fileStream1 = File.Create("./server1.jar");
+Progress<ProgressEventArgs> progress = new();
+progress.ProgressChanged += (_, progress) => Console.Write($"\rProgress: {progress.ProgressPercentage}% ({progress.BytesTransferred / 1024 / 1024}MB / {progress.TotalBytes / 1024 / 1024}MB)          ");
+await serverJar.GetJar(fileStream1, "servers", "spigot", progress: progress);
+
+
+// GetJar Method 2
+SetConsoleColor(ConsoleColor.White, ConsoleColor.Red);
+Console.WriteLine("\n\nAPI call - GetJar method 2:\n");
+ResetConsoleColor();
+
+using (var stream = await serverJar.GetJar("servers", "spigot", "1.19.1"))
 {
-    stream.Seek(0, SeekOrigin.Begin);
-    Console.WriteLine($"Downloaded {stream.Length / 1024 / 1024} MB.");
-    using var fileStream = File.Create("./server.jar");
-    stream.CopyTo(fileStream);
+    using var fileStream2 = File.Create("./server2.jar");
+    await stream.CopyToAsync(fileStream2);
 }
 
 

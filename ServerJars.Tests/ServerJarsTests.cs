@@ -1,3 +1,4 @@
+using ServerJarsAPI.Events;
 using System.Text.Json;
 
 namespace ServerJarsAPI.Tests;
@@ -85,7 +86,12 @@ public class ServerJarsTests
     public async Task GetJar_Success(string type, string category, string version)
     {
         using var stream = await _serverJars.GetJar(type, category, version);
-        Assert.That(stream.Length, Is.GreaterThan(0));
+        Assert.That(stream.CanRead, Is.True);
+
+        using var memStream = new MemoryStream();
+        await stream.CopyToAsync(memStream);
+
+        Assert.That(memStream.Length, Is.GreaterThan(0));
     }
 
     [TestCase("abc", "spigot", "")]
@@ -94,5 +100,52 @@ public class ServerJarsTests
     public void GetJar_InvalidTypeCategoryVersion(string type, string category, string version)
     {
         Assert.ThrowsAsync<HttpRequestException>(async () => await _serverJars.GetJar(type, category, version));
+    }
+
+
+    [TestCase("servers", "spigot", "")]
+    [TestCase("servers", "spigot", "1.19.1")]
+    public async Task GetJarWithProgress_Success(string type, string category, string version)
+    {
+        bool progressChanged = false;
+        using var memStream = new MemoryStream();
+        Progress<ProgressEventArgs> progress = new();
+        progress.ProgressChanged += (_, progress) =>
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(progress.ProgressPercentage, Is.AtLeast(0));
+                Assert.That(progress.ProgressPercentage, Is.AtMost(100));
+            });
+            progressChanged = true;
+        };
+
+        await _serverJars.GetJar(memStream, type, category, version, progress);
+        Assert.That(progressChanged, Is.True);
+    }
+
+    [TestCase("abc", "spigot", "")]
+    [TestCase("servers", "abc", "")]
+    [TestCase("servers", "spigot", "1.19.110")]
+    public void GetJarWithProgress_InvalidTypeCategoryVersion(string type, string category, string version)
+    {
+        bool progressChanged = false;
+        using var memStream = new MemoryStream();
+        Progress<ProgressEventArgs> progress = new();
+        progress.ProgressChanged += (_, progress) =>
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(progress.ProgressPercentage, Is.AtLeast(0));
+                Assert.That(progress.ProgressPercentage, Is.AtMost(100));
+            });
+            progressChanged = true;
+        };
+
+        Assert.Multiple(() =>
+        {
+            Assert.ThrowsAsync<HttpRequestException>(async () => await _serverJars.GetJar(memStream, type, category, version, progress));
+            Assert.That(progressChanged, Is.True);
+        });
     }
 }

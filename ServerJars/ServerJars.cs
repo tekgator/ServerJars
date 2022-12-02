@@ -1,4 +1,5 @@
-﻿using ServerJarsAPI.Models;
+﻿using ServerJarsAPI.Events;
+using ServerJarsAPI.Models;
 
 namespace ServerJarsAPI;
 
@@ -8,13 +9,10 @@ namespace ServerJarsAPI;
 /// </summary>
 public class ServerJars : ClientApi
 {
-    public ServerJars() :
-        this(new HttpClient(), true)
-    { }
+    public ServerJars() : base("https://serverjars.com/api/")
+    {
 
-    public ServerJars(HttpClient httpClient, bool disposeClient = false) :
-        base("https://serverjars.com/api/", httpClient, disposeClient)
-    { }
+    }
 
     public Task<JarTypes> GetTypes(
         string type = "",
@@ -58,4 +56,16 @@ public class ServerJars : ClientApi
     {
         return StreamAsync($"fetchJar/{type}/{category}/{version}", cancellationToken);
     }
+
+    public Task GetJar(
+        Stream stream,
+        string type,
+        string category,
+        string version = "",
+        IProgress<ProgressEventArgs>? progress = null,
+        CancellationToken cancellationToken = default)
+    {
+        return DownloadAsync(stream, $"fetchJar/{type}/{category}/{version}", progress, cancellationToken);
+    }
+
 }
