@@ -1,4 +1,5 @@
 using ServerJarsAPI.Events;
+using ServerJarsAPI.Extensions;
 using System.Text.Json;
 
 namespace ServerJarsAPI.Tests;
@@ -9,9 +10,7 @@ public class ServerJarsTests
 
     [SetUp]
     public void Setup()
-    {
-
-    }
+    { }
 
     [TestCase("")]
     [TestCase("servers")]
@@ -25,6 +24,16 @@ public class ServerJarsTests
     public void GetTypes_InvalidType(string type)
     {
         Assert.ThrowsAsync<JsonException>(async () => await _serverJars.GetTypes(type));
+    }
+
+    [TestCase("")]
+    [TestCase("servers")]
+    public async Task GetTypes_SuccessAsList(string type)
+    {
+        var types = (await _serverJars.GetTypes(type)).ToList();
+        var item = types.FirstOrDefault(t => t.Category == "servers");
+
+        Assert.That(item, Is.Not.Null);
     }
 
     [TestCase("servers", "spigot", "")]
@@ -101,7 +110,6 @@ public class ServerJarsTests
     {
         Assert.ThrowsAsync<HttpRequestException>(async () => await _serverJars.GetJar(type, category, version));
     }
-
 
     [TestCase("servers", "spigot", "")]
     [TestCase("servers", "spigot", "1.19.1")]

@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.0] - 2022-12-06
+### Changed
+- Remove JsonPropertyName attribute from models and work with JsonSerializerOptions case insensitive property instead
+
+### Added
+- Add ToList method on JarTypes Model to return a list of JarTypeItems for easier access via enumerable
+
 
 ## [1.0.2] - 2022-12-02
 ### Changed

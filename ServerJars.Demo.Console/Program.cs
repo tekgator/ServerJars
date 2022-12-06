@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using ServerJarsAPI;
 using ServerJarsAPI.Events;
+using ServerJarsAPI.Extensions;
 using System.Text.Json;
 
 var jsonOptions = new JsonSerializerOptions
@@ -19,6 +20,13 @@ ResetConsoleColor();
 
 var types = await serverJar.GetTypes();
 Console.WriteLine(JsonSerializer.Serialize(types, jsonOptions));
+
+// GetTypes.ToList() extension
+SetConsoleColor(ConsoleColor.White, ConsoleColor.Red);
+Console.WriteLine("\nAPI call - GetTypes.ToList() extension:\n");
+ResetConsoleColor();
+
+types.ToList().ForEach(t => Console.WriteLine(t.ToString()));
 
 
 // GetDetails
