@@ -20,6 +20,7 @@ public abstract class ClientApi : IDisposable
         _disposeClient = disposeClient;
 
         _jsonOptions.Converters.Add(new UnixEpochDateTimeConverter());
+        _jsonOptions.PropertyNameCaseInsensitive = true;
     }
 
     protected async Task<T> GetAsync<T>(
