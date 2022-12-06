@@ -39,12 +39,13 @@ var serverJar = new ServerJars();
 var types = await serverJar.GetTypes();
 Console.WriteLine(JsonSerializer.Serialize(types, jsonOptions));
 
-// GetTypes.ToList() extension
+// GetTypes.AsDictionary() extension
 SetConsoleColor(ConsoleColor.White, ConsoleColor.Red);
-Console.WriteLine("\nAPI call - GetTypes.ToList():\n");
+Console.WriteLine("\nAPI call - GetTypes.AsDictionary():\n");
 ResetConsoleColor();
 
-types.ToList().ForEach(t => Console.WriteLine(t.ToString()));
+var dict = types.AsDictionary();
+Console.WriteLine(string.Join(Environment.NewLine, dict.Select((kv) => $"{kv.Key}: {string.Join(", ", kv.Value)}")));
 
 // GetDetails
 var details = await serverJar.GetDetails("servers", "spigot", "1.19.1");

@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.1] - 2022-12-06
+### Changed
+- Replace ToList with AsDictionary extension
+- Remove JarTypeItems model
+
+
 ## [1.1.0] - 2022-12-06
 ### Changed
 - Remove JsonPropertyName attribute from models and work with JsonSerializerOptions case insensitive property instead

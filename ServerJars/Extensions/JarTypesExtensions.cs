@@ -4,16 +4,15 @@ namespace ServerJarsAPI.Extensions;
 
 public static class JarTypesExtensions
 {
-    public static List<JarTypeItem> ToList(this JarTypes jarTypes)
+    public static Dictionary<string, IEnumerable<string>> AsDictionary(this JarTypes jarTypes)
     {
-        List<JarTypeItem> list = new();
-
-        list.AddRange(jarTypes.Vanilla.Select(v => new JarTypeItem() { Category = nameof(jarTypes.Vanilla).ToLower(), Type = v }));
-        list.AddRange(jarTypes.Bedrock.Select(v => new JarTypeItem() { Category = nameof(jarTypes.Bedrock).ToLower(), Type = v }));
-        list.AddRange(jarTypes.Servers.Select(v => new JarTypeItem() { Category = nameof(jarTypes.Servers).ToLower(), Type = v }));
-        list.AddRange(jarTypes.Modded.Select(v => new JarTypeItem() { Category = nameof(jarTypes.Modded).ToLower(), Type = v }));
-        list.AddRange(jarTypes.Proxies.Select(v => new JarTypeItem() { Category = nameof(jarTypes.Proxies).ToLower(), Type = v }));
-
-        return list;
+        return new()
+        {
+            { nameof(jarTypes.Vanilla).ToLower(), jarTypes.Vanilla },
+            { nameof(jarTypes.Bedrock).ToLower(), jarTypes.Bedrock },
+            { nameof(jarTypes.Servers).ToLower(), jarTypes.Servers },
+            { nameof(jarTypes.Modded).ToLower(), jarTypes.Modded },
+            { nameof(jarTypes.Proxies).ToLower(), jarTypes.Proxies },
+        };
     }
 }

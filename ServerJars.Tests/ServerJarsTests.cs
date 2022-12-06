@@ -28,12 +28,15 @@ public class ServerJarsTests
 
     [TestCase("")]
     [TestCase("servers")]
-    public async Task GetTypes_SuccessAsList(string type)
+    public async Task GetTypes_SuccessAsDictionary(string type)
     {
-        var types = (await _serverJars.GetTypes(type)).ToList();
-        var item = types.FirstOrDefault(t => t.Category == "servers");
+        var types = (await _serverJars.GetTypes(type)).AsDictionary();
 
-        Assert.That(item, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(types.ContainsKey("servers"), Is.True);
+            Assert.That(types["servers"].Count(), Is.GreaterThan(0));
+        });
     }
 
     [TestCase("servers", "spigot", "")]
