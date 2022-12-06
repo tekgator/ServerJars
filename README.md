@@ -29,12 +29,22 @@ Simply instantiate the `ServerJars` class and use it's methods to gather informa
 
 ```CSharp
 using ServerJarsAPI;
+using ServerJarsAPI.Events;
+using ServerJarsAPI.Extensions;
+using System.Text.Json;
 
 var serverJar = new ServerJars();
 
 // GetTypes
 var types = await serverJar.GetTypes();
 Console.WriteLine(JsonSerializer.Serialize(types, jsonOptions));
+
+// GetTypes.ToList() extension
+SetConsoleColor(ConsoleColor.White, ConsoleColor.Red);
+Console.WriteLine("\nAPI call - GetTypes.ToList():\n");
+ResetConsoleColor();
+
+types.ToList().ForEach(t => Console.WriteLine(t.ToString()));
 
 // GetDetails
 var details = await serverJar.GetDetails("servers", "spigot", "1.19.1");
