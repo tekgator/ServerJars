@@ -89,7 +89,7 @@ using (var stream = await serverJar.GetJar("servers", "spigot", "1.19.1"))
 
 ## Demo application
 
-Have a look at the [Console Demo](ServerJars/ServerJars.Demo.Console) within the repository. 
+Have a look at the [Console Demo](ServerJars.Demo.Console/Program.cs) within the repository. 
 It will run straight out of the box to give you a hint what the library can do for you.
 
 
