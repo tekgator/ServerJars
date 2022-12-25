@@ -2,14 +2,16 @@
 using ServerJarsAPI.Events;
 using ServerJarsAPI.Extensions;
 using ServerJarsAPI.Models;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Text.Json;
 
 namespace ServerJarsAPI;
 
 public abstract class ClientApi : IDisposable
 {
-    private readonly HttpClient _httpClient;
+    protected readonly HttpClient _httpClient;
     private readonly bool _disposeClient = true;
     private readonly JsonSerializerOptions _jsonOptions = new();
 
@@ -21,6 +23,14 @@ public abstract class ClientApi : IDisposable
 
         _jsonOptions.Converters.Add(new UnixEpochDateTimeConverter());
         _jsonOptions.PropertyNameCaseInsensitive = true;
+
+        if (!_httpClient.DefaultRequestHeaders.UserAgent.Any())
+        {
+            var assemblyName = Assembly.GetExecutingAssembly().GetName();
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"{assemblyName.Name} / Version {assemblyName.Version?.ToString()}");
+        }
+        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
     }
 
     protected async Task<T> GetAsync<T>(
@@ -28,8 +38,6 @@ public abstract class ClientApi : IDisposable
         CancellationToken cancellationToken = default)
     {
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-        requestMessage.Headers.Add("Accept", "application/json");
-
         using var httpResponse = await _httpClient.SendAsync(requestMessage, cancellationToken);
 
         if (httpResponse.IsSuccessStatusCode)
@@ -52,8 +60,6 @@ public abstract class ClientApi : IDisposable
         CancellationToken cancellationToken = default)
     {
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-        requestMessage.Headers.Add("Accept", "application/json");
-
         var httpResponse = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
         if (httpResponse.IsSuccessStatusCode)
@@ -74,8 +80,6 @@ public abstract class ClientApi : IDisposable
         progress?.Report(new ProgressEventArgs());
 
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-        requestMessage.Headers.Add("Accept", "application/json");
-
         using var httpResponse = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
         if (!httpResponse.IsSuccessStatusCode)
