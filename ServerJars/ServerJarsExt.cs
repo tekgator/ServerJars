@@ -9,6 +9,14 @@ namespace ServerJarsAPI;
 /// </summary>
 public class ServerJarsExt : ServerJars
 {
+    public ServerJarsExt() :
+        this(new HttpClient())
+    { }
+
+    public ServerJarsExt(HttpClient httpClient, bool disposeClient = true) :
+        base(httpClient, disposeClient)
+    { }
+
     public new async Task<Dictionary<string, IEnumerable<string>>> GetTypes(
         string type = "",
         CancellationToken cancellationToken = default)

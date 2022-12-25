@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.2.1] - 2022-12-25
+### Fixed
+- Constructor on ServerJarsExt missing
+
+
 ## [1.2.0] - 2022-12-25
 ### Added
 - Add UserAgent to HTTP client if not already set by the calling assembly
