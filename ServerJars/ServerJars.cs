@@ -10,10 +10,10 @@ namespace ServerJarsAPI;
 public class ServerJars : ClientApi
 {
     public ServerJars() :
-        this(new HttpClient(), true)
+        this(new HttpClient())
     { }
 
-    public ServerJars(HttpClient httpClient, bool disposeClient = false) :
+    public ServerJars(HttpClient httpClient, bool disposeClient = true) :
         base("https://serverjars.com/api/", httpClient, disposeClient)
     { }
 
