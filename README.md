@@ -40,10 +40,6 @@ var types = await serverJar.GetTypes();
 Console.WriteLine(JsonSerializer.Serialize(types, jsonOptions));
 
 // GetTypes.AsDictionary() extension
-SetConsoleColor(ConsoleColor.White, ConsoleColor.Red);
-Console.WriteLine("\nAPI call - GetTypes.AsDictionary():\n");
-ResetConsoleColor();
-
 var dict = types.AsDictionary();
 Console.WriteLine(string.Join(Environment.NewLine, dict.Select((kv) => $"{kv.Key}: {string.Join(", ", kv.Value)}")));
 
@@ -60,10 +56,6 @@ var allDetails = await serverJar.GetAllDetails("servers", "spigot", 5u);
 Console.WriteLine(JsonSerializer.Serialize(allDetails, jsonOptions));
 
 // GetJar Method 1 (including progress)
-SetConsoleColor(ConsoleColor.White, ConsoleColor.Red);
-Console.WriteLine("\nAPI call - GetJar with method 1 (with progress):\n");
-ResetConsoleColor();
-
 using var fileStream1 = File.Create("./server1.jar");
 Progress<ProgressEventArgs> progress = new();
 progress.ProgressChanged += (_, e) =>
@@ -75,10 +67,6 @@ await fileStream1.FlushAsync();
 Console.WriteLine($"\nDownloaded {fileStream1.Length / 1024 / 1024}MB to {fileStream1.Name}");
 
 // GetJar Method 2
-SetConsoleColor(ConsoleColor.White, ConsoleColor.Red);
-Console.WriteLine("\nAPI call - GetJar method 2:\n");
-ResetConsoleColor();
-
 using (var stream = await serverJar.GetJar("servers", "spigot", "1.19.1"))
 {
     using var fileStream2 = File.Create("./server2.jar");
@@ -86,6 +74,11 @@ using (var stream = await serverJar.GetJar("servers", "spigot", "1.19.1"))
     Console.WriteLine($"Downloaded {fileStream2.Length / 1024 / 1024}MB to {fileStream2.Name}");
 }
 ```
+
+### ServerJarExt
+
+`ServerJarExt` is an extended version of the API e.g. providing the `JarTypes` directly as Dictionary and adds a few more information to the [JarDetails](ServerJars/Models/JarDetails.cs) in an [JarDetailsExt](ServerJars/Models/JarDetailsExt.cs) Version.
+
 
 ## Demo application
 
