@@ -2,9 +2,39 @@
 ServerJars .NET API
 ======
 
+<p>
+  <a href="https://github.com/tekgator/ServerJars/blob/main/LICENSE" alt="License">
+    <img src="https://img.shields.io/github/license/tekgator/ServerJars" />
+  </a>
+  <img src="https://img.shields.io/github/languages/top/tekgator/ServerJars" />
+  <a href="https://www.nuget.org/packages/ServerJars" alt="Nuget">
+    <img alt="Nuget" src="https://img.shields.io/nuget/dt/ServerJars">
+  </a>
+  <a href="https://github.com/tekgator/ServerJars/actions/workflows/build-on-push.yml" alt="BuildStatus">
+    <img src="https://img.shields.io/github/actions/workflow/status/tekgator/ServerJars/build-on-push.yml?branch=main" />
+  </a>
+  <a href="https://github.com/tekgator/ServerJars/releases" alt="Releases">
+    <img src="https://img.shields.io/github/v/release/tekgator/ServerJars" />
+  </a>
+  <a href="https://github.com/tekgator/ServerJars/releases" alt="Releases">
+    <img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/tekgator/ServerJars">
+  </a>
+  <a href="https://github.com/tekgator/ServerJars/commit" alt="Commit">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tekgator/ServerJars">
+  </a>
+</p>
+
 Implementation of the ServerJars.com API as a .NET library.
 
 Please see [API Documentation](https://serverjars.com/documentation) for further details
+
+## Support
+
+I try to be responsive to [Stack Overflow questions in the `serverjars-net` tag](https://stackoverflow.com/questions/tagged/serverjars-net) and [issues logged on this GitHub repository](https://github.com/tekgator/ServerJars/issues).
+
+If I've helped you and you like some of my work, feel free to buy me a coffee ☕ (or more likely a beer 🍺)
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C7LO3V1)
 
 
 ## Installing
@@ -84,15 +114,6 @@ using (var stream = await serverJar.GetJar("servers", "spigot", "1.19.1"))
 
 Have a look at the [Console Demo](ServerJars.Demo.Console/Program.cs) within the repository. 
 It will run straight out of the box to give you a hint what the library can do for you.
-
-
-## Support
-
-I try to be responsive to [Stack Overflow questions in the `serverjars-net` tag](https://stackoverflow.com/questions/tagged/serverjars-net) and [issues logged on this GitHub repository](https://github.com/tekgator/ServerJars/issues). 
-
-If I've helped you, feel free to buy me a coffee or see the Sponsor link [at the top right of the GitHub page](https://github.com/tekgator/ServerJars).
-
-<a href="https://www.buymeacoffee.com/tekgator" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
 
 ## Dependencies and Credits
